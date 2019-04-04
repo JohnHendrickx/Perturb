@@ -1,0 +1,10 @@
+importFrom("stats", "addmargins", "as.formula", "coef", "coefficients", "getCall", "model.frame",
+             "formula", "glm", "model.matrix", "na.omit", "poisson",
+             "runif", "sd", "terms")
+
+S3method(summary, perturb)
+S3method(print, summary.perturb)
+S3method(print, colldiag)
+S3method(print, reclassify)
+
+export(perturb,colldiag,reclassify,summary.perturb,print.summary.perturb)

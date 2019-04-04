@@ -1,0 +1,27 @@
+Package: perturb
+Type: Package
+Title: Tools for Evaluating Collinearity
+Version: 3.0
+Author: John Hendrickx <John.Hendrickx@Danone.com>
+Maintainer: John Hendrickx <John.Hendrickx@Danone.com>
+Description: Use the perturb() function to evaluates collinearity by adding 
+    random noise to selected variables (Hendrickx & Pelzer 2004). Version 3.0
+    of perturb() can be used with mixed models by nlme and lme4 (Hendrickx 2018).
+    The colldiag function() calculates condition numbers and variance 
+    decomposition proportions to test for collinearity and uncover its sources 
+    (Belsley 1980).
+License: GPL (>= 2)
+Imports: gdata
+Suggests: 
+    car,
+    rms,
+    lme4,
+    nlme,
+    knitr,
+    rmarkdown,
+    lmerTest,
+    tidyr,
+    ggplot2,
+    huxtable
+LazyData: true
+VignetteBuilder: knitr
