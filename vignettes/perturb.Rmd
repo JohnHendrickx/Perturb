@@ -168,13 +168,13 @@ L <- rbind(c(0,0,0,1,0),c(0,0,0,0,1))
 
 To test the stability of the results, the model was re-estimated 100 times, adding a random number from normal distribution with mean of 0 and an SD of 0.5 to variable week at each iteration. An SD of 0.5 will result in 95.4% of the perturbations being between -1 and 1 week. The variable week_16 was derived from week at each iteration prior to re-estimating the model. At each iteration, the random and fixed effects of the model were stored, then presented at the end of the procedure using summary statistics.
 
-```{r}
+```{r, warning=FALSE}
 # Make the results reproducable
 set.seed(803790744)
 
-# q<-perturb(m1,pvars=c("week"),prange=c(0.5),ptrans="week_16<-pmax(week-16,0)",postrun="lmerTest::contest(m1,L)")
-# (q_sum<-summary(q))
-# saveRDS(q, file = "SD0_5.rds")
+q<-perturb(m1,pvars=c("week"),prange=c(0.5),ptrans="week_16<-pmax(week-16,0)",postrun="lmerTest::contest(m1,L)")
+(q_sum<-summary(q))
+saveRDS(q, file = "SD0_5.rds")
 ```
 ```{r}
 q <-readRDS(file = "SD0_5.rds")
