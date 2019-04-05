@@ -187,9 +187,7 @@ q_tbl[1,1]$rownames <- ""
 caption(q_tbl) <- "Summary statistics of model coefficients after 100 perturbations (SD = 0.5)"
 theme_article(q_tbl)
 ```
-This table shows the results of the perturbation analysis. The SD of the coefficients over the iterations shows which coefficients were most affected by the perturbations. This is the case for the correlations of the intercept with variables `week` and `eek_16`. The correlations between the intercept and week had an SD of 0.196 over the iterations and ranged from 0.291 to 1.000. The correlation between the intercept and `week_16` also has a moderately high SD of 0.106 and ranges from -0.838 to -0.419. The fixed effects, on which the substantive conclusions are based, remain quite stable.
-
-The `perturb` program captures warning messages from `lmer`. Of the 100 perturbed models, 11 had convergence problems. Of these, 9 models produced a warning “unable to evaluate scaled gradient; Model failed to converge: degenerate Hessian with 1 negative eigenvalues”, 2 iterations had 2 negative eigenvalues. The remaining 89 models reported that the model was nearly unidentifiable due to a very large eigenvalue, as had the original, unperturbed model.
+This table shows the results of the perturbation analysis. The SD of the coefficients over the iterations shows which coefficients were most affected by the perturbations. This is the case for the correlations of the intercept with variables `week` and `week_16`. The correlations between the intercept and week had an SD of 0.097 over the iterations and ranged from 0.292 to 1.000. The correlation between the intercept and `week_16` also has a moderately high SD of 0.063 and ranges from -0.842 to -0.422. The fixed effects, on which the substantive conclusions are based, remain quite stable.
 
 The descriptive statistics of coefficients over the iterations can also be represented by a set of box-plots. In these boxplots, the lower and upper hinges correspond with the first and third quartiles. The upper whisker extends from the hinge to the highest value under 1.5 * IQR (Inter-Quartile Range), the lower whisker extends to the lowest value under 1.5 * IQR. Values outside the upper and lower whiskers can be considered outliers.
 
@@ -213,8 +211,19 @@ include_graphics("lmer_fig1.png")
 ```
 
 
-The boxplot for the correlation between the random intercept and the random slope for week is quite interesting. There is an outlier for the value 1, followed by a gap down to under 0.5. An examination of the perturbed parameters shows 9 values of exactly 1. If these values are excluded, the maximum correlation between the intercept and week is 0.45. These 9 models with a perfect correlation all had convergence problems, 2 models with convergence problems had more moderate correlations between the random intercept and random slope for week.
+The boxplot for the correlation between the random intercept and the random slope for week is quite interesting. There is an outlier for the value 1, followed by a gap down to under 0.5. An examination of the perturbed parameters shows 2 values of exactly 1. 
 
+```{r}
+b <- which(q$coeff.table[,"id|(Intercept)|week"] > 0.999)
+length(b)
+```
+
+If these values are excluded, the maximum correlation between the intercept and week is 0.45. 
+
+```{r}
+options(digits=3)
+summary(q$coeff.table[-b,"id|(Intercept)|week"])
+```
 
 ```{r}
 # Extract the postrun values
