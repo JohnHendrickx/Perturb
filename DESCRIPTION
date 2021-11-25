@@ -10,6 +10,7 @@ Description: Use the perturb() function to evaluates collinearity by adding
     The colldiag function() calculates condition numbers and variance 
     decomposition proportions to test for collinearity and uncover its sources 
     (Belsley 1980).
+Depends: R (>= 3.5.0)
 License: GPL (>= 2)
 Imports: gdata
 Suggests: 
@@ -22,6 +23,8 @@ Suggests:
     lmerTest,
     tidyr,
     ggplot2,
-    huxtable
+    huxtable,
+    arsenal,
+    simstudy
 LazyData: true
 VignetteBuilder: knitr

@@ -166,7 +166,7 @@ L <- rbind(c(0,0,0,1,0),c(0,0,0,0,1))
 
 ## Perturbance Analysis
 
-To test the stability of the results, the model was re-estimated 100 times, adding a random number from normal distribution with mean of 0 and an SD of 0.5 to variable week at each iteration. An SD of 0.5 will result in 95.4% of the perturbations being between -1 and 1 week. The variable week_16 was derived from week at each iteration prior to re-estimating the model. At each iteration, the random and fixed effects of the model were stored, then presented at the end of the procedure using summary statistics.
+To test the stability of the results, the model was re-estimated 100 times, adding a random number from normal distribution with mean of 0 and an SD of 0.5 to variable week at each iteration. An SD of 0.5 will result in 95.4% of the perturbations being between -1 and 1 week. The variable week_16 was derived from week at each iteration prior to re-estimating the model. At each iteration, the random and fixed effects of the model were stored, then presented at the end of the procedure using summary statistics. Warnings are suppressed in the following results, there are warning messages for all iterations.
 
 ```{r, warning=FALSE}
 # Make the results reproducable
@@ -214,8 +214,7 @@ include_graphics("lmer_fig1.png")
 The boxplot for the correlation between the random intercept and the random slope for week is quite interesting. There is an outlier for the value 1, followed by a gap down to under 0.5. An examination of the perturbed parameters shows 2 values of exactly 1. 
 
 ```{r}
-b <- which(q$coeff.table[,"id|(Intercept)|week"] > 0.999)
-length(b)
+( b <- which(q$coeff.table[,"id|(Intercept)|week"] > 0.999) )
 ```
 
 If these values are excluded, the maximum correlation between the intercept and week is 0.45. 
@@ -225,12 +224,15 @@ options(digits=3)
 summary(q$coeff.table[-b,"id|(Intercept)|week"])
 ```
 
+The results of the linear tests can be extracted and plotted as before. There are two outliers with respect to F-values. Unsurprisingly, these are for the two interation with perfect correlations between the the random intercept and the random slope for `week`.
+
 ```{r}
 # Extract the postrun values
 prun <- q$postrun
 prun$call <- NULL
 prun <- do.call("rbind",prun)
 prun$iter <- seq.int(nrow(prun))
+which(prun[,"F value"] > 31) 
 conplot <- ggplot(data=prun,aes(x=iter,y=prun[,5],group=1))
 conplot <- conplot + geom_step()+geom_point()
 conplot <- conplot + scale_x_continuous(name="Iteration")
@@ -246,5 +248,15 @@ dev.off()
 include_graphics("conplot.png") 
 ```
 
+It could be useful to reproduce the results of one of these models. This can be done by replacing the value of variable `week` in the data by the perturbed value used in iteration 96. This is stored in the `perturbed` property of the output object. Any derived variables such as `week_16` must be re-derived, then the model can be estimated in a straightforward fashion.
 
-The conclusion must be that this model is indeed unstable, in the sense that changes to the data could lead to convergence problems. What is very interesting is that the fixed effects remain stable, despite the fact that random effects show strong shifts or perfect correlations among random effects.
+```{r}
+newdata <- cd4
+newdata[,"week"] <- q$perturbed[[96]]
+newdata$week_16 <- pmax(newdata$week - 16,0)
+
+n1<-lmer(logcd4 ~ week+week_16+trt:week+trt:week_16 + (1+week+week_16 | id),data=newdata)
+(n1summary<-summary(n1))
+```
+
+The conclusion is that this model is indeed unstable, in the sense that small changes to the data can lead to different coefficients, and particularly to a correlation of 1. What is very interesting is that the fixed effects remain so stable.

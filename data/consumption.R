@@ -32,4 +32,3 @@ year	cons	rate	dpi	d_dpi
 1974	539.45	8.56583	602.875	-16.625
 ")
 consumption <- data.frame(consumption)
-saveRDS(consumption, file = "consumption.rds")
